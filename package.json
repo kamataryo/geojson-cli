@@ -1,5 +1,5 @@
 {
-  "name": "geojson-cli",
+  "name": "@kamataryo/geojson-cli",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
