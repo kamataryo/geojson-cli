@@ -1,12 +1,6 @@
 #!/usr/bin/env node
 
-import { isatty } from "tty"
-import process from 'process'
-
-process.stdin.resume();
-process.stdin.setEncoding("utf8");
-
-let data = "";
+import { stdin } from "./lib";
 
 const parseConcatenatedGeojson = (data: string) => {
     const geojsons = data.replace(/\}[\r\n\s]*\{/g, "}%SEPARATOR%{").split("%SEPARATOR%")
@@ -21,7 +15,7 @@ const parseConcatenatedGeojson = (data: string) => {
 
 }
 
-const onEnd = () => {
+stdin().then(data => {
     const geojsonObjects = parseConcatenatedGeojson(data)
     const concatenated = geojsonObjects.reduce((prev, geojsonObject) => {
         prev.features.push(...geojsonObject.features)
@@ -32,11 +26,4 @@ const onEnd = () => {
     })
 
     process.stdout.write(JSON.stringify(concatenated, null, 2))
-};
-
-if (isatty(0)) {
-    onEnd();
-} else {
-    process.stdin.on("data", chunk => (data += chunk));
-    process.stdin.on("end", onEnd);
-}
+})

@@ -1,14 +1,8 @@
 #!/usr/bin/env node
 
-import { isatty } from "tty"
-import process from 'process'
+import { stdin } from "./lib";
 
-process.stdin.resume();
-process.stdin.setEncoding("utf8");
-
-let data = "";
-
-const onEnd = () => {
+stdin().then((data) => {
     const geojsonObject = JSON.parse(data) as GeoJSON.FeatureCollection<GeoJSON.MultiPolygon>
     const { features } = geojsonObject
     const polygons = features.flatMap(feature => {
@@ -27,11 +21,4 @@ const onEnd = () => {
         features: polygons
     }
     process.stdout.write(JSON.stringify(featureCollection, null, 2))
-};
-
-if (isatty(0)) {
-    onEnd();
-} else {
-    process.stdin.on("data", chunk => (data += chunk));
-    process.stdin.on("end", onEnd);
-}
+})
