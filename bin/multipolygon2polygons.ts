@@ -10,7 +10,7 @@ let data = "";
 
 const onEnd = () => {
     const geojsonObject = JSON.parse(data) as GeoJSON.FeatureCollection<GeoJSON.MultiPolygon>
-    const {features} = geojsonObject
+    const { features } = geojsonObject
     const polygons = features.flatMap(feature => {
         return feature.geometry.coordinates.map(coordinate => {
             return {
@@ -30,8 +30,8 @@ const onEnd = () => {
 };
 
 if (isatty(0)) {
-  onEnd();
+    onEnd();
 } else {
-  process.stdin.on("data", chunk => (data += chunk));
-  process.stdin.on("end", onEnd);
+    process.stdin.on("data", chunk => (data += chunk));
+    process.stdin.on("end", onEnd);
 }
